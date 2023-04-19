@@ -1,32 +1,32 @@
-//RJ12のピン配列
-//1 白 TX
-//2 黒 RX
-//3 赤 GND
-//4 緑 GND
-//5 黄 +15V
-//6 青 +15V
+//RJ12 Pinout
+//1 White TX
+//2 Black RX
+//3 Red GND
+//4 Green GND
+//5 Yellow +15V
+//6 Green +15V
 
 
-#define MODBUS_SERIAL Serial2   //renogy Roverをつないでいるポート
-#include "RenogyRover.h"        //なぜかライブラリとして認識しなかったので。
-                                //ほかにModbusMaster.hが必要。Arduinoのライブラリを管理から入手可能
+#define MODBUS_SERIAL Serial2   //Renogy Rover Com Port
+#include "RenogyRover.h"        //For some reason it wasn't recognized as a library.
+                                //ModbusMaster.h is also required. Available from Manage Arduino Libraries
 RenogyRover rover;
 PanelState panel;
 BatteryState battery;
 DayStatistics daystat;
 HistStatistics histstat;
 ChargingState chargestat;
-char* model="0000000000000000";//16バイトなので15文字
+char* model="0000000000000000";//16 bytes, so 15 characters
 FaultCode* faultcode;
 int numerr = 0;
 
 void setup() 
 {
   // put your setup code here, to run once:
-  Serial.begin(9600);   //roverの純正通信ユニット(BT-1)は9600bps
+  Serial.begin(9600);   //Rover's genuine communication unit (BT-1) is 9600bps
   rover.begin(9600);
   
-  if(rover.getProductModel(model))      //型番取得（RNG-CTRL-RVR20）とか
+  if(rover.getProductModel(model))      //Model number acquisition (RNG-CTRL-RVR20)
   {
     Serial.println(model);
   }
@@ -39,7 +39,7 @@ void setup()
 void loop() {
   // put your main code here, to run repeatedly:
   Serial.println("------------------------------------------------");
-  if(rover.getPanelState(&panel))      //パネル状態取得
+  if(rover.getPanelState(&panel))      //Get panel status
   {
     Serial.print("PV=,");
     Serial.print(panel.voltage);
@@ -54,7 +54,7 @@ void loop() {
     Serial.println("panelgetERROR");
   }
 
-  if(rover.getBatteryState(&battery))      //バッテリ状態取得
+  if(rover.getBatteryState(&battery))      //Get battery status
   {
     Serial.print("BV=,");
     Serial.print(battery.batteryVoltage);
@@ -73,7 +73,7 @@ void loop() {
     Serial.println("batterygetERROR");
   }
 
-  if(rover.getDayStatistics(&daystat))      //今日の統計
+  if(rover.getDayStatistics(&daystat))      //Get day statistics
   {
     Serial.print("DAY:minBV=,");
     Serial.print(daystat.batteryVoltageMinForDay);
@@ -102,21 +102,21 @@ void loop() {
     Serial.println("daystatgetERROR");
   }
 
-  if(rover.getHistoricalStatistics(&histstat))      //歴代統計
+  if(rover.getHistoricalStatistics(&histstat))      //Get historical stats
   {
-    Serial.print("稼働日数=,");
+    Serial.print("Operating Days=,");
     Serial.print(histstat.operatingDays);
-    Serial.print(",d, 過放電=,");
+    Serial.print(",d, Overdischarges=,");
     Serial.print(histstat.batOverDischarges);
-    Serial.print(", 満充電=,");
+    Serial.print(", Full Charges=,");
     Serial.print(histstat.batFullCharges);
-    Serial.print(", TotalCHGAH=,");
+    Serial.print(", Total Charging Amp Hrs=,");
     Serial.print(histstat.batChargingAmpHours);
-    Serial.print(",AH, TotalDISCHGAH=,");
+    Serial.print(",AH, Total Discharge Amp Hrs=,");
     Serial.print(histstat.batDischargingAmpHours);
-    Serial.print(",AH, 総発電量=,");
+    Serial.print(",AH, Total Power Generated=,");
     Serial.print(histstat.powerGenerated);
-    Serial.print(",kWH, 総消費電力量=,");
+    Serial.print(",kWH, Total Power Consumed=,");
     Serial.print(histstat.powerConsumed);
     Serial.println(",kWH");
   }
@@ -127,15 +127,15 @@ void loop() {
 
   if(rover.getChargingState(&chargestat))      //充電状況
   {
-    Serial.print("日光状態=,");
+    Serial.print("Sunlight State=,");
     Serial.print(chargestat.streetLightState);
-    Serial.print(", 日光明度=,");
+    Serial.print(", Sunlight Brightness=,");
     Serial.print(chargestat.streetLightBrightness);
-    Serial.print(", 充電モード=,");
+    Serial.print(", Charging Mode,");
     switch(chargestat.chargingMode)
     {
       case UNDEFINED:
-        Serial.print("未定義");
+        Serial.print("UNDEFINED");
         break;
       case DEACTIVATED:
         Serial.print("DEACTIVATED");
@@ -159,7 +159,7 @@ void loop() {
         Serial.print("OVERPOWER");
         break;
       default:
-        Serial.print("未定義");
+        Serial.print("UNDEFINED");
     }
     
     Serial.println("");
@@ -169,7 +169,7 @@ void loop() {
     Serial.println("chargestatgetERROR");
   }
 /*
- * よくわからなかった
+ * I dont understand
  * int getErrors(FaultCode*& errors, int& numErrors);
  * 
   if(rover.getErrors(*faultcode,&numerr))      //エラー取得
@@ -181,6 +181,6 @@ void loop() {
     Serial.println("Error get ERROR");
   }
 */
-  //int setStreetLight(int state);    //こんなのもあるよ
+  //int setStreetLight(int state);    //There is also
   delay(500);
 }
