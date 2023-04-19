@@ -7,7 +7,7 @@
 //6 Green +15V
 
 
-#define MODBUS_SERIAL Serial2   //Renogy Rover Com Port
+#define MODBUS_SERIAL Serial   //Renogy Rover Com Port
 #include "RenogyRover.h"        //For some reason it wasn't recognized as a library.
                                 //ModbusMaster.h is also required. Available from Manage Arduino Libraries
 RenogyRover rover;
