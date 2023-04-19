@@ -172,7 +172,7 @@ void loop() {
  * I dont understand
  * int getErrors(FaultCode*& errors, int& numErrors);
  * 
-  if(rover.getErrors(*faultcode,&numerr))      //エラー取得
+  if(rover.getErrors(*faultcode,&numerr))      //Get Errors
   {
     
   }
